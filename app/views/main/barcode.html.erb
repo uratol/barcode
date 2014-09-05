@@ -1,0 +1,42 @@
+
+<h1>Barcode EAN-13 test application</h1>
+
+<%= form_tag '/', method: :get do %>
+<%= label_tag 'EAN-13 barcode'%>
+<%= text_field_tag 'barcode', params[:barcode] %>
+<%= label_tag 'Prefix'%>
+<%= check_box_tag 'prefix', 1, params[:prefix] %>
+<%= label_tag 'Width'%>
+<%= number_field_tag 'width', params[:width] || 200 %>
+<%= label_tag 'Height'%>
+<%= number_field_tag 'height', params[:height] || 100 %>
+<%= submit_tag 'Generate' %>
+
+<% end %>
+<br/>
+<br/>
+<div style="margin-left: 100px;margin-top: 50px;">
+<canvas id="ean" width="<%= params[:width] || 200 %>" height="<%= params[:height] || 100 %>">
+    Your browser does not support canvas-elements.
+</canvas>
+</div>
+
+<div id="msg" style="margin-left: 100px; color:red">
+	
+</div>
+
+<script type="text/javascript"> 
+
+var element = document.getElementById("ean");
+var options = {
+	prefix: <%= params[:prefix]=='1' ? 'true' : 'false' %>,
+	onError: function(){
+      document.getElementById("msg").innerText = "Error barcode number";
+   },
+   onInvalid: function(){
+   	document.getElementById("msg").innerText = "Checksum is invalid!";
+   }
+}
+new EAN13(element, "<%= params[:barcode] %>", options);
+
+</script>
